@@ -146,6 +146,15 @@ const TaskColumn = ({ status, tasks, onUpdateTask, bgcolor, onDeleteTask }) => {
                                     >
                                         {task.description}
                                     </Typography>
+                                    {task.dueDate && (
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{ marginY: "1rem" }}
+                                        >
+                                            Due Date: {task.dueDate}
+                                        </Typography>
+                                    )}
                                     <div
                                         style={{
                                             display: "flex",
