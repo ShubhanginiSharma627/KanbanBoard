@@ -14,7 +14,7 @@ const Register = () => {
         try {
             const response = await registerUser({ name, email, password });
             // Handle successful registration, e.g., redirect to login page
-            navigate("/");
+            navigate("/taskboard");
         } catch (error) {
             console.error("Failed to register:", error);
         }

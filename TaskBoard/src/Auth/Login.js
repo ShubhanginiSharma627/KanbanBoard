@@ -16,7 +16,7 @@ const Login = () => {
             localStorage.setItem("token", response.token);
             localStorage.setItem("email", response.email);
             localStorage.setItem("name", response.name);
-            navigate("/"); // Redirect to the task board
+            navigate("/taskboard"); // Redirect to the task board
         } catch (error) {
             console.error("Failed to login:", error);
         }
