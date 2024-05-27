@@ -13,7 +13,7 @@ function App() {
                 <div className="App">
                     <Routes>
                         <Route
-                            path="/"
+                            path="/taskboard"
                             element={<PrivateRoute element={<TaskBoard />} />}
                         />
                         <Route path="/login" element={<Login />} />
