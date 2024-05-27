@@ -10,54 +10,55 @@ import React, { useState } from "react";
 const TaskFilter = ({ onFilter }) => {
     const [assignee, setAssignee] = useState("");
     const [priority, setPriority] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [reminderDate, setReminderDate] = useState("");
     const [status, setStatus] = useState("All");
 
     const handleStatusFilter = (event) => {
         const newStatus = event.target.value;
         setStatus(newStatus);
-        handleFilter(assignee, newStatus, priority, startDate, endDate);
+        handleFilter(assignee, newStatus, priority, dueDate, reminderDate);
     };
 
     const handleAssigneeFilter = (event) => {
         const newAssignee = event.target.value;
         setAssignee(newAssignee);
-        handleFilter(newAssignee, status, priority, startDate, endDate);
+        handleFilter(newAssignee, status, priority, dueDate, reminderDate);
     };
 
     const handlePriorityFilter = (event) => {
         const newPriority = event.target.value;
         setPriority(newPriority);
-        handleFilter(assignee, status, newPriority, startDate, endDate);
+        handleFilter(assignee, status, newPriority, dueDate, reminderDate);
     };
 
-    const handleStartDateFilter = (event) => {
-        const newStartDate = event.target.value;
-        setStartDate(newStartDate);
-        console.log("newstatr", newStartDate);
-        handleFilter(assignee, status, priority, newStartDate, endDate);
+    const handleDueDateFilter = (event) => {
+        const newDueDate = event.target.value;
+        setDueDate(newDueDate);
+        handleFilter(assignee, status, priority, newDueDate, reminderDate);
     };
 
-    const handleEndDateFilter = (event) => {
-        const newEndDate = event.target.value;
-        setEndDate(newEndDate);
-        handleFilter(assignee, status, priority, startDate, newEndDate);
+    const handleReminderDateFilter = (event) => {
+        const newReminderDate = event.target.value;
+        setReminderDate(newReminderDate);
+        handleFilter(assignee, status, priority, dueDate, newReminderDate);
     };
 
     const handleFilter = (
         newAssignee,
         newStatus,
         newPriority,
-        newStartDate,
-        newEndDate
+        newDueDate,
+        newReminderDate
     ) => {
         const filters = {
             assignee: newAssignee.trim() ? newAssignee : undefined,
             priority: newPriority || undefined,
             status: newStatus || undefined,
-            startDate: newStartDate ? new Date(newStartDate) : undefined,
-            endDate: newEndDate ? new Date(newEndDate) : undefined,
+            dueDate: newDueDate ? new Date(newDueDate) : undefined,
+            reminderDate: newReminderDate
+                ? new Date(newReminderDate)
+                : undefined,
         };
         onFilter(filters);
     };
@@ -114,7 +115,7 @@ const TaskFilter = ({ onFilter }) => {
                     </Select>
                 </FormControl>
                 <TextField
-                    label="Start Date"
+                    label="Due Date"
                     type="date"
                     variant="outlined"
                     size="small"
@@ -123,27 +124,26 @@ const TaskFilter = ({ onFilter }) => {
                         backgroundColor: "whitesmoke",
                         borderRadius: "5px",
                     }}
-                    value={startDate}
-                    onChange={handleStartDateFilter}
-                    name="startDate"
+                    value={dueDate}
+                    onChange={handleDueDateFilter}
+                    name="dueDate"
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
-                    label="End Date"
+                    label="Reminder Date"
                     type="date"
                     variant="outlined"
                     size="small"
-                    value={endDate}
                     sx={{
                         margin: "1rem",
                         backgroundColor: "whitesmoke",
                         borderRadius: "5px",
                     }}
-                    onChange={handleEndDateFilter}
-                    name="endDate"
+                    value={reminderDate}
+                    onChange={handleReminderDateFilter}
+                    name="reminderDate"
                     InputLabelProps={{ shrink: true }}
                 />
-                {/* Button removed as filtering happens on change */}
             </div>
             <div
                 style={{
@@ -174,7 +174,7 @@ const TaskFilter = ({ onFilter }) => {
                         label="Priority"
                         sx={{ height: "100%" }}
                     >
-                        <MenuItem value="">All Priorities</MenuItem>
+                        <MenuItem value="All">All Priorities</MenuItem>
                         <MenuItem value="P0">P0</MenuItem>
                         <MenuItem value="P1">P1</MenuItem>
                         <MenuItem value="P2">P2</MenuItem>

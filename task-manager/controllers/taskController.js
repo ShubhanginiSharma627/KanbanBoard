@@ -10,7 +10,16 @@ export const getAllTasks = async (req, res) => {
 };
 
 export const createTask = async (req, res) => {
-    const { title, description, status, assignee, team, priority } = req.body;
+    const {
+        title,
+        description,
+        status,
+        assignee,
+        team,
+        priority,
+        dueDate,
+        reminderDate,
+    } = req.body;
 
     if (!title) {
         return res
@@ -51,6 +60,8 @@ export const createTask = async (req, res) => {
             assignee,
             team,
             priority,
+            dueDate,
+            reminderDate,
         });
 
         const savedTask = await newTask.save();

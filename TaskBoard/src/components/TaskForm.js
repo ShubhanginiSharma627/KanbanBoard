@@ -21,7 +21,8 @@ const TaskForm = ({ open, onClose, onSubmit, onUpdateTask, initialTask }) => {
         initialTask || {
             title: "",
             description: "",
-            startDate: new Date(),
+            dueDate: new Date(),
+            reminderDate: new Date(),
             status: "To Do",
             team: "",
             assignee: "",
@@ -36,7 +37,8 @@ const TaskForm = ({ open, onClose, onSubmit, onUpdateTask, initialTask }) => {
         setFormData({
             title: "",
             description: "",
-            startDate: new Date(),
+            dueDate: new Date(),
+            reminderDate: new Date(),
             status: "To Do",
             team: "",
             assignee: "",
@@ -44,6 +46,7 @@ const TaskForm = ({ open, onClose, onSubmit, onUpdateTask, initialTask }) => {
         });
         setErrors({});
     };
+
     const validateForm = () => {
         const newErrors = {};
 
@@ -63,6 +66,7 @@ const TaskForm = ({ open, onClose, onSubmit, onUpdateTask, initialTask }) => {
 
         return Object.keys(newErrors).length === 0;
     };
+
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -210,6 +214,64 @@ const TaskForm = ({ open, onClose, onSubmit, onUpdateTask, initialTask }) => {
                 {errors.assignee && (
                     <FormHelperText error>{errors.assignee}</FormHelperText>
                 )}
+                <Box
+                    mt={2}
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Typography
+                        variant="subtitle1"
+                        sx={{ marginRight: "1rem" }}
+                    >
+                        Due Date:
+                    </Typography>
+                    <TextField
+                        type="date"
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                            margin: "1rem",
+                            backgroundColor: "whitesmoke",
+                            borderRadius: "5px",
+                        }}
+                        value={formData.dueDate}
+                        onChange={handleChange}
+                        name="dueDate"
+                        InputLabelProps={{ shrink: true }}
+                    />
+                </Box>
+                <Box
+                    mt={2}
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Typography
+                        variant="subtitle1"
+                        sx={{ marginRight: "1rem" }}
+                    >
+                        Reminder Date:
+                    </Typography>
+                    <TextField
+                        type="date"
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                            margin: "1rem",
+                            backgroundColor: "whitesmoke",
+                            borderRadius: "5px",
+                        }}
+                        value={formData.reminderDate}
+                        onChange={handleChange}
+                        name="reminderDate"
+                        InputLabelProps={{ shrink: true }}
+                    />
+                </Box>
                 <Box
                     mt={2}
                     display={initialTask ? "flex" : "block"}

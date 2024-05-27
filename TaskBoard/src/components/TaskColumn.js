@@ -39,6 +39,7 @@ const TaskColumn = ({ status, tasks, onUpdateTask, bgcolor, onDeleteTask }) => {
 
     const handleOpenTaskForm = () => {
         setOpenTaskForm(true);
+        handleMenuClose();
     };
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -48,9 +49,10 @@ const TaskColumn = ({ status, tasks, onUpdateTask, bgcolor, onDeleteTask }) => {
 
     const handleMenuClose = () => {
         setAnchorEl(null);
+        op = false;
     };
 
-    const op = Boolean(anchorEl); // Moved from top
+    let op = Boolean(anchorEl); // Moved from top
 
     const [selectedStatus, setSelectedStatus] = useState(status);
     const anchorRef = useRef(null);

@@ -1,6 +1,15 @@
 import { Login } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
-import { Box, Button, Grid, Paper, Popover, Typography } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    Grid,
+    Paper,
+    Popover,
+    Snackbar,
+    Typography,
+} from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -17,6 +26,7 @@ const TaskBoard = () => {
         status: "",
         startDate: "",
         endDate: "",
+        reminderDate: "",
     });
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [openTaskForm, setOpenTaskForm] = useState(false);
@@ -25,7 +35,19 @@ const TaskBoard = () => {
         { status: "In Progress", tasks: [] },
         { status: "Done", tasks: [] },
     ]);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [reminder, setReminder] = useState("");
+    const checkReminderDates = (tasks) => {
+        const now = new Date();
+        const reminderTasks = tasks.filter(
+            (task) => task.reminderDate && new Date(task.reminderDate) <= now
+        );
 
+        if (reminderTasks.length > 0) {
+            setOpenSnackbar(true);
+            setReminder(reminderTasks);
+        }
+    };
     // Fetch tasks from API
     useEffect(() => {
         const fetchTasks = async () => {
@@ -33,6 +55,7 @@ const TaskBoard = () => {
                 const tasks = await getTasks();
                 console.log(tasks);
                 setAllTasks(tasks);
+                checkReminderDates(tasks);
             } catch (error) {
                 console.error("Failed to fetch tasks:", error);
             }
@@ -99,7 +122,8 @@ const TaskBoard = () => {
 
     const filterTasks = useCallback(
         (filters) => {
-            const { assignee, status, startDate, endDate } = filters;
+            const { assignee, status, priority, dueDate, reminderDate } =
+                filters;
             const filtered = allTasks.filter((task) => {
                 const assigneeLowerCase = assignee
                     ? assignee.toLowerCase().trim().replace(/\s/g, "")
@@ -111,16 +135,25 @@ const TaskBoard = () => {
                     !assignee || taskAssignee.includes(assigneeLowerCase);
                 const isStatusMatch =
                     !status || task.status === status || status === "All";
-                const isStartDateMatch =
-                    !startDate ||
-                    new Date(task.startDate) >= new Date(startDate);
-                const isEndDateMatch =
-                    !endDate || new Date(task.startDate) <= new Date(endDate);
+                const isDueDateMatch =
+                    !dueDate ||
+                    new Date(task.dueDate).toDateString() ===
+                        new Date(dueDate).toDateString();
+                const isReminderDateMatch =
+                    !reminderDate ||
+                    new Date(task.reminderDate).toDateString() ===
+                        new Date(reminderDate).toDateString();
+                const isPriorityMatch =
+                    !priority ||
+                    task.priority === priority ||
+                    priority === "All";
+
                 return (
                     isAssigneeMatch &&
                     isStatusMatch &&
-                    isStartDateMatch &&
-                    isEndDateMatch
+                    isPriorityMatch &&
+                    isDueDateMatch &&
+                    isReminderDateMatch
                 );
             });
             setFilteredTasks(filtered);
@@ -152,7 +185,12 @@ const TaskBoard = () => {
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
-
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
     const handleLogout = () => {
         localStorage.removeItem("email");
         localStorage.removeItem("name");
@@ -280,6 +318,21 @@ const TaskBoard = () => {
                         ))}
                     </Grid>
                 </Paper>
+                <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                >
+                    <Alert
+                        onClose={handleSnackbarClose}
+                        severity="warning"
+                        sx={{ width: "100%" }}
+                    >
+                        You have {reminder.length} tasks with upcoming
+                        reminders!
+                    </Alert>
+                </Snackbar>
             </div>
         </DndProvider>
     );

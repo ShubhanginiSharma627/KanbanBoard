@@ -24,9 +24,17 @@ const TaskSchema = new Schema({
         type: String,
         enum: ["P0", "P1", "P2"],
     },
-    date: {
+    startDate: {
         type: Date,
         default: Date.now,
+    },
+    dueDate: {
+        type: Date,
+        required: false,
+    },
+    reminderDate: {
+        type: Date,
+        required: false,
     },
 });
 

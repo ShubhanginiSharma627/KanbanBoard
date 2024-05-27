@@ -57,6 +57,8 @@ describe("Task API", () => {
             assignee: "Tester",
             team: "Test Team",
             priority: "P2",
+            dueDate: new Date("2023-12-31"),
+            reminderDate: new Date("2023-12-30"),
         };
 
         const response = await request(app)
