@@ -8,17 +8,59 @@ const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [nameError, setNameError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
     const { login } = useAuth();
+
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    };
+
+    const validatePassword = (password) => {
+        return password.length >= 6;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        let valid = true;
+
+        if (!name) {
+            setNameError("Name is required");
+            valid = false;
+        } else {
+            setNameError("");
+        }
+
+        if (!validateEmail(email)) {
+            setEmailError("Invalid email address");
+            valid = false;
+        } else {
+            setEmailError("");
+        }
+
+        if (!validatePassword(password)) {
+            setPasswordError("Password must be at least 6 characters");
+            valid = false;
+        } else {
+            setPasswordError("");
+        }
+
+        if (!valid) {
+            return;
+        }
+
         try {
             const response = await registerUser({ name, email, password });
-            // Handle successful registration, e.g., redirect to login page
+            // Handle successful registration
             login(response);
             navigate("/taskboard");
         } catch (error) {
             console.error("Failed to register:", error);
+            setEmailError("Failed to register. Please try again.");
         }
     };
 
@@ -35,16 +77,18 @@ const Register = () => {
                         margin="normal"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        required
+                        error={!!nameError}
+                        helperText={nameError}
                     />
                     <TextField
                         label="Email"
-                        type="email"
+                        type="text"
                         fullWidth
                         margin="normal"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
+                        error={!!emailError}
+                        helperText={emailError}
                     />
                     <TextField
                         label="Password"
@@ -53,7 +97,8 @@ const Register = () => {
                         margin="normal"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
+                        error={!!passwordError}
+                        helperText={passwordError}
                     />
                     <Button
                         type="submit"

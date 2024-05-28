@@ -7,17 +7,51 @@ import { loginUser } from "../utils/api";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
     const { login } = useAuth();
+
+    const validateEmail = (email) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    };
+
+    const validatePassword = (password) => {
+        // Add any specific password validation rules here
+        return password.length >= 6;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        let valid = true;
+
+        if (!validateEmail(email)) {
+            setEmailError("Invalid email address");
+            valid = false;
+        } else {
+            setEmailError("");
+        }
+
+        if (!validatePassword(password)) {
+            setPasswordError("Password must be at least 6 characters");
+            valid = false;
+        } else {
+            setPasswordError("");
+        }
+
+        if (!valid) {
+            return;
+        }
+
         try {
             const response = await loginUser({ email, password });
-            // Handle successful login, e.g., save token to local storage
             login(response);
             navigate("/taskboard"); // Redirect to the task board
         } catch (error) {
             console.error("Failed to login:", error);
+            setEmailError("Invalid email or password");
         }
     };
 
@@ -30,12 +64,13 @@ const Login = () => {
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Email"
-                        type="email"
+                        type="text"
                         fullWidth
                         margin="normal"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
+                        error={!!emailError}
+                        helperText={emailError}
                     />
                     <TextField
                         label="Password"
@@ -44,7 +79,8 @@ const Login = () => {
                         margin="normal"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
+                        error={!!passwordError}
+                        helperText={passwordError}
                     />
                     <Button
                         type="submit"

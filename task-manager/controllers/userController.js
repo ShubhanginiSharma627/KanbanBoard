@@ -21,7 +21,18 @@ export const registerUser = async (req, res) => {
         user.password = await bcrypt.hash(password, salt);
         await user.save();
 
-        res.json(user);
+        // Generate JWT token
+        const payload = { id: user.id, name: user.name };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: "7d",
+        });
+
+        res.json({
+            success: true,
+            token: "Bearer " + token,
+            name: user.name,
+            email: email,
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

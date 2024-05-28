@@ -51,7 +51,13 @@ const TaskColumn = ({ status, tasks, onUpdateTask, bgcolor, onDeleteTask }) => {
         setAnchorEl(null);
         op = false;
     };
-
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
     let op = Boolean(anchorEl); // Moved from top
 
     const [selectedStatus, setSelectedStatus] = useState(status);
@@ -152,7 +158,7 @@ const TaskColumn = ({ status, tasks, onUpdateTask, bgcolor, onDeleteTask }) => {
                                             color="textSecondary"
                                             sx={{ marginY: "1rem" }}
                                         >
-                                            Due Date: {task.dueDate}
+                                            Due Date: {formatDate(task.dueDate)}
                                         </Typography>
                                     )}
                                     <div
