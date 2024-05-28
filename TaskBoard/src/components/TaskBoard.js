@@ -13,6 +13,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useAuth } from "../utils/AuthContext";
 import { createTask, deleteTask, getTasks, updateTask } from "../utils/api"; // Import API functions
 import DroppableTaskColumn from "./DroppableTaskColumn";
 import TaskColumn from "./TaskColumn";
@@ -20,6 +21,7 @@ import TaskFilter from "./TaskFilter";
 import TaskForm from "./TaskForm";
 
 const TaskBoard = () => {
+    const { logout } = useAuth();
     const [allTasks, setAllTasks] = useState([]);
     const [filters, setFilters] = useState({
         assignee: undefined,
@@ -192,9 +194,7 @@ const TaskBoard = () => {
         setOpenSnackbar(false);
     };
     const handleLogout = () => {
-        localStorage.removeItem("email");
-        localStorage.removeItem("name");
-        localStorage.removeItem("token");
+        logout();
         // Redirect to login page, assuming you're using React Router
         window.location.href = "/login";
     };

@@ -1,21 +1,20 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 import { loginUser } from "../utils/api";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
+    const { login } = useAuth();
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await loginUser({ email, password });
             // Handle successful login, e.g., save token to local storage
-            localStorage.setItem("token", response.token);
-            localStorage.setItem("email", response.email);
-            localStorage.setItem("name", response.name);
+            login(response);
             navigate("/taskboard"); // Redirect to the task board
         } catch (error) {
             console.error("Failed to login:", error);

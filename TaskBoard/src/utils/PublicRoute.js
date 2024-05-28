@@ -1,11 +1,12 @@
+// utils/PublicRoute.js
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
-const PrivateRoute = ({ element }) => {
+const PublicRoute = ({ element }) => {
     const { isAuthenticated } = useAuth();
 
-    return isAuthenticated ? element : <Navigate to="/login" />;
+    return isAuthenticated ? <Navigate to="/taskboard" /> : element;
 };
 
-export default PrivateRoute;
+export default PublicRoute;

@@ -1,6 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 import { registerUser } from "../utils/api";
 
 const Register = () => {
@@ -8,12 +9,13 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
+    const { login } = useAuth();
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await registerUser({ name, email, password });
             // Handle successful registration, e.g., redirect to login page
+            login(response);
             navigate("/taskboard");
         } catch (error) {
             console.error("Failed to register:", error);
